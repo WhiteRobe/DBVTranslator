@@ -75,7 +75,7 @@ if __name__ == "__main__":
         xls.save(args.output)
 
         print('Success!')
-        print('Warning: Key Constraint Infornation(Specific:Foreign Key) lost.')
+        print('Warning: Key Constraint Information(Specific:Foreign Key) will be ignore.')
     except:
         print('Failed! Mysql Server not connected!')
         traceback.print_exc()

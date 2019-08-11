@@ -76,6 +76,9 @@ class ReCulomnDriver(DRIVER):
         # 查询是否为UNIQUE键值
         key_constraint = "UNI" if re.search(r'UNIQUE', s, re.I) is not None else ""
 
+        # 查询是否为无符号值
+        key_type += " UNSIGNED" if re.search(r'UNSIGNED', s, re.I) is not None else ""
+
         # 是否自增，在备注中标出
         desc += "; AUTO_INC" if re.search(r'AUTO_INCREMENT', s, re.I) is not None else ""
 
