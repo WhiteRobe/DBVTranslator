@@ -112,3 +112,4 @@ dmypy.json
 log/
 *.xls
 CallShell.bat
+!requirement.txt
