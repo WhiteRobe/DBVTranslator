@@ -20,11 +20,11 @@ class CoColumnDriver(DRIVER):
         default_value = "" if default_value is None else default_value
 
         # 将ENUM的信息提取出来
-        res = re.search(r'ENUM *\( *(.*?) *\)', key_type, re.I)
-        if res:
-            default_value += res.group(1)
-            key_type = "ENUM"
-            desc += "; ENUM"
+        # res = re.search(r'ENUM *\( *(.*?) *\)', key_type, re.I)
+        # if res:
+        #     default_value += res.group(1)
+        #     key_type = "ENUM"
+        #     desc += "; ENUM"
         
         # 转义空值定义 
         not_null = "YES" if not_null == "NO" else "NO"

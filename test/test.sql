@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS test1 (
 /* 表2注释(表头说明可缺省) */
 CREATE TABLE test2 (
     /* 标题3(标题说明不可缺省) */ id INT NOT NULL AUTO_INCREMENT /* 备注3(备注说明不可缺省) */, 
-    /* 标题4 */ V2 ENUM ('7', 'value1', 'value2' )/* 备注4 */, 
+    /* 标题4 */ V2 ENUM ('7', 'value1', 'value2' ) DEFAULT '7'/* 备注4 */, 
     PRIMARY KEY (id)
 );
 

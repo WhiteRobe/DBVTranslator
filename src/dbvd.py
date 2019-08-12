@@ -65,10 +65,14 @@ class ReCulomnDriver(DRIVER):
             title, column_name, key_type, desc = res.groups()
 
         # 查询默认值或枚举值 r'DEFAULT (\d|(?:\'.*?\'))' || r'ENUM ?\( ?(.*?) ?\)'
-        res = re.search(r'DEFAULT (\d|(?:\'.*?\'))|ENUM ?\( ?(.*?) ?\)', s, re.I)
+        # res = re.search(r'DEFAULT (\d|(?:\'.*?\'))|ENUM ?\( ?(.*?) ?\)', s, re.I)
+        res = re.search(r'DEFAULT (\d|(?:\'.*?\'))', s, re.I)
         if res:
-            default_value = res.group(1) if res.group(1) is not None else res.group(2)
-            desc += "; ENUM" if res.group(2) is not None else "" # 是否为枚举值，如是则标注到备注里
+            default_value = res.group(1)
+
+        res = re.search(r'ENUM ?(\(.*?\))', s, re.I)
+        if res:
+            key_type += res.group(1)
 
         # 是否可空
         not_null = "YES" if re.search(r'NOT NULL', s, re.I) is not None or default_value != "" else "NO"
