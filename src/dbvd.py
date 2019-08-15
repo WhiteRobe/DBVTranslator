@@ -6,7 +6,7 @@ from structure import TABLE, COLUMN, DRIVER
 class ReTableDriver(DRIVER):
     def parse(self, s):
         comment, table_name, columns, engine, charset = "", "None", [], "Default", "Default"
-        primary_keys, foreign_keys = [], []
+        primary_keys, foreign_keys, index_keys = [], [], []
 
         # 提取表信息
         res = re.search(r'(/\*.*\*/)?\s*CREATE TABLE(?: IF NOT EXISTS)?\s*(\w+)\s*\(.*\)', s, re.I|re.S)
@@ -23,12 +23,13 @@ class ReTableDriver(DRIVER):
                     continue
                 res_pri = re.search(r'PRIMARY KEY ?\( *(\w+) *\)', i, re.I)
                 res_for = re.search(r'FOREIGN KEY ?\( *(\w+) *\) ?REFERENCES (\w+) ?\( *(\w+) *\)', i, re.I)
+                res_index = re.search(r'INDEX \w* *\( *(\w+) *\)', i, re.I)
                 if res_pri:
                     primary_keys.append(res_pri.groups())
-                    pass
                 elif res_for:
                     foreign_keys.append(res_for.groups())
-                    pass
+                elif res_index:
+                    index_keys.append(res_index.groups())
                 else:
                     columns.append(COLUMN(i, ReCulomnDriver()))
 
@@ -40,7 +41,11 @@ class ReTableDriver(DRIVER):
         for i in foreign_keys:
             for c in columns:
                 if(c.column_name == i[0]):
-                    c.key_constraint = 'FOR %s.%s' % (i[1], i[2])
+                    c.key_constraint += '; FOR %s.%s' % (i[1], i[2])
+        for i in index_keys:
+            for c in columns:
+                if(c.column_name == i[0]):
+                    c.key_constraint += '; INDEX'
 
         return comment, table_name, columns, engine, charset
         
