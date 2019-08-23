@@ -6,7 +6,7 @@ from structure import TABLE, COLUMN, DRIVER
 class ReTableDriver(DRIVER):
     def parse(self, s):
         comment, table_name, columns, engine, charset = "", "None", [], "Default", "Default"
-        primary_keys, foreign_keys, index_keys = [], [], []
+        primary_keys, foreign_keys, index_keys, unique_keys = [], [], [], []
 
         # 提取表信息
         res = re.search(r'(/\*.*\*/)?\s*CREATE TABLE(?: IF NOT EXISTS)?\s*(\w+)\s*\(.*\)', s, re.I|re.S)
@@ -24,12 +24,16 @@ class ReTableDriver(DRIVER):
                 res_pri = re.search(r'PRIMARY KEY ?\( *(\w+) *\)', i, re.I)
                 res_for = re.search(r'FOREIGN KEY ?\( *(\w+) *\) ?REFERENCES (\w+) ?\( *(\w+) *\)', i, re.I)
                 res_index = re.search(r'INDEX \w* *\( *(\w+) *\)', i, re.I)
+                res_unique = re.search(r'^ ?UNIQUE[\w ]*\( *([\w+, ]+) *\)', i, re.I)
                 if res_pri:
                     primary_keys.append(res_pri.groups())
                 elif res_for:
                     foreign_keys.append(res_for.groups())
                 elif res_index:
                     index_keys.append(res_index.groups())
+                elif res_unique:
+                    unique_keys.extend(re.sub(r' *', '', res_unique.group(1)).split(','))
+                    unique_keys = list(set(unique_keys)) # 去重
                 else:
                     columns.append(COLUMN(i, ReCulomnDriver()))
 
@@ -46,6 +50,11 @@ class ReTableDriver(DRIVER):
             for c in columns:
                 if(c.column_name == i[0]):
                     c.key_constraint += '; INDEX'
+        for i in unique_keys:
+            for c in columns:
+                if(c.column_name == i):
+                    c.key_constraint += '; CO-UNIQUE'
+                    c.desc += '; UNIQUE%s' % unique_keys
 
         return comment, table_name, columns, engine, charset
         
