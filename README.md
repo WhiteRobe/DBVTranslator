@@ -1,6 +1,7 @@
 # DBVTranslator
 
 ![License](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)
+<a href="https://zenodo.org/badge/latestdoi/201638527"><img src="https://zenodo.org/badge/201638527.svg" alt="DOI"></a>
 
 这个轻量化的小工具将帮助你将一个`sql`文件转化为`xls`文件，以帮助进行数据字典的构建。同时，也可以直接从数据库里导出表结构到`xls`文件。(当前仅支持Mysql数据库)
 
