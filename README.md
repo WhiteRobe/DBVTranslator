@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS test1 (
 参数|说明|示例值
 :-:|:-:|:-:
 host|数据库域名|localhost
-post|数据库端口|3306
+port|数据库端口|3306
 u|数据库访问用户名|root
 p|数据库访问密码|password
 db|要导出的数据库名|db
